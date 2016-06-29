@@ -32,20 +32,22 @@ public class Patents {
         
         /******************** Config stuff ********************/
         
-        /* Path to PDF's */
-        String usptoPDFPath = "http://pimg-fpiw.uspto.gov/fdd/";
         
-        /* API options*/
+        /* CSV options */
         String apiBaseUrl = "http://www.patentsview.org/api/patents/query";
         String selectBy = "assignee_organization";
         String[] selectVals = {"virginia tech", "vpi", "virginia polytechnic"};
-        
+        String csvOutputPath = "./VTPatents.csv";
         // Can just set as large number you know is greater than # of patents
         int patentCount = 10000;
-        String[] desiredFields = {"patent_number","inventor_first_name", "inventor_last_name", "patent_abstract"};
+        String[] desiredFields = {"patent_number","inventor_first_name", "inventor_last_name", "patent_abstract","uspc_mainclass_id", "uspc_subclass_id"};
         
-        /* Download every patent pdf? Will take a while if set to true */
-        boolean getPDFs = true;
+        
+        /* PDF Options */
+        String usptoPDFPath = "http://pimg-fpiw.uspto.gov/fdd/";
+        boolean getPDFs = false;
+        String pdfDumpPath = "./filedump";
+        String csvPDFFieldName = "patent_number";
         
         /*****************************************************/
         
@@ -54,14 +56,33 @@ public class Patents {
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
         .newInstance();
      
-        System.out.println("Downloading XML from " + apiBaseUrl);
+        System.out.println("\n[INFO] Downloading XML from " + apiBaseUrl);
+        System.out.println("\n[INFO] Selecting by `" + selectBy + "`");
+        System.out.println("Where `" + selectBy + "` contains any of the following: ");
+        System.out.println(Arrays.toString(selectVals));
+        
         Document allPatents = xmlFromApi(apiBaseUrl, selectBy, selectVals, desiredFields, patentCount);
+        
+        System.out.println("\n[INFO]Getting fields: ");
+        System.out.println(Arrays.toString(desiredFields));
         
    
         Element root = (Element)allPatents.getElementsByTagName("root").item(0);
         Element patents = (Element)root.getElementsByTagName("patents").item(0);
         NodeList entries = patents.getChildNodes();
-        System.out.println("Extracting metadata for " + entries.getLength() + " patent(s)");
+        
+        System.out.println("\n[INFO] Extracting metadata for " + entries.getLength() + " patent(s)");
+        System.out.printf("\n[OPTION] Would you like to download PDF's (Y/N): ");
+            
+        Scanner in = new Scanner(System.in);
+        if (in.next().toLowerCase().equals("y")) {
+            getPDFs = true;
+              System.out.println("[INFO] Dumping PDFS to `" + pdfDumpPath + "`");
+        } 
+        else {
+            getPDFs = false;
+        }
+        System.out.println("\n[INFO] Creating `" + csvOutputPath + "`");
         
         
      
@@ -78,30 +99,30 @@ public class Patents {
            
             
 
-            myDoc.joinEntries( "inventors_last_first", 
+            myDoc.joinEntries( "inventors", 
                 new String[] {"inventor_last_name", "inventor_first_name"}, "\\|\\|", ",", true);
             
             
         
            
         }
-       printCSV(database, "./VTPatents.csv");
+       printCSV(database, csvOutputPath);
    
         
         if (getPDFs) {
             // Download PDFs 
             Process p = Runtime.getRuntime().exec("mkdir ./filedump");
             for (Doc doc : database) {
-                StringBuilder sb = new StringBuilder("wget  -O filedump/" + doc.getEntry("patent_number") + ".pdf");
+                StringBuilder sb = new StringBuilder("wget  -O " + pdfDumpPath + "/" + doc.getEntry(csvPDFFieldName) + ".pdf");
                 // Url is based on pat number
                 
                 sb.append(" ");
                 sb.append(usptoPDFPath);
                 
                 String baseUrl = sb.toString();
-                String patNumName = getUsptoFilename(doc.getEntry("patent_number"));
+                String patNumName = getUsptoFilename(doc.getEntry(csvPDFFieldName));
                 sb.append(patNumName);
-                System.out.println("GET " + doc.getEntry("patent_number") + ".pdf");
+                System.out.println("GET " + doc.getEntry(csvPDFFieldName) + ".pdf");
                 p = Runtime.getRuntime().exec(sb.toString());
                 p.waitFor();
                 
