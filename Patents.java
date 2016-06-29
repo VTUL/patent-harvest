@@ -40,7 +40,7 @@ public class Patents {
         String csvOutputPath = "./VTPatents.csv";
         // Can just set as large number you know is greater than # of patents
         int patentCount = 10000;
-        String[] desiredFields = {"patent_number","inventor_first_name", "inventor_last_name", "patent_abstract","uspc_mainclass_id", "uspc_subclass_id"};
+        String[] desiredFields = {"patent_number","inventor_first_name", "inventor_last_name", "patent_abstract", "uspc_subclass_id"};
         
         
         /* PDF Options */
@@ -101,6 +101,9 @@ public class Patents {
 
             myDoc.joinEntries( "inventors", 
                 new String[] {"inventor_last_name", "inventor_first_name"}, "\\|\\|", ",", true);
+                
+            // API renames uspc_subclass_id to uspc for some reason
+            myDoc.splitAtIndex("uspc", "Original Classification", "Cross Reference Classification", 1, true);
             
             
         
@@ -422,6 +425,39 @@ public class Patents {
                 }
                 
             }
+        }
+        /* Creates new column by splitting an old column specified index 
+         * Specified index is included in newCol2
+         * */
+        public void splitAtIndex(String oldCol, String newCol1, String newCol2, int index, boolean deleteOld) {
+            if(getEntry(oldCol) == null) {
+                return;
+            }
+            String[] items = getEntry(oldCol).split("\\|\\|");
+            StringBuilder val1 = new StringBuilder();
+            StringBuilder val2 = new StringBuilder();
+            
+            int i = 0;
+            for (; i < items.length; ++i) {
+                if (i < index) {
+                    val1.append(items[i]);
+                    if (i < index - 1) {
+                        val1.append("||");
+                    }
+                }
+                else {
+                    val2.append(items[i]);
+                    if (i < items.length - 1) {
+                        val2.append("||");
+                    }
+                }
+            }
+            addEntry(newCol1, val1.toString());
+            addEntry(newCol2, val2.toString());
+             if (deleteOld) {
+               removeEntry(oldCol);
+            }
+            
         }
     }
 }
