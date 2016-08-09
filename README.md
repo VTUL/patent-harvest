@@ -37,7 +37,7 @@ cd to cloned repo
 `java -cp "javax.json-1.0.jar:." Patents`
 
 ## Manually extracting text from a pdf.
-Works well, though garbage is produced for the many figures in the patents
+Works well, though sometimes l is confused with 1. Line numbers are detected too.
 
 `pdfimages -j somefile.pdf ./`
 
