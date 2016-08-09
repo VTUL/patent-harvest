@@ -36,8 +36,7 @@ cd to cloned repo
 
 `java -cp "javax.json-1.0.jar:." Patents`
 
-## Manually extracting text from a pdf.
-Works well, though sometimes l is confused with 1. Line numbers are detected too.
+## Add OCR'd text to PDF
 
 `pdfimages -j somefile.pdf ./`
 
@@ -45,5 +44,5 @@ Works well, though sometimes l is confused with 1. Line numbers are detected too
 
 `rm -- *pbm`
 
-`tesseract -l eng some_image.tif some_text`
+`tesseract -l eng some_image.tif some_pdf pdf`
 
