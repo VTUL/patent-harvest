@@ -36,7 +36,9 @@ cd to cloned repo
 
 `java -cp "javax.json-1.0.jar:." Patents`
 
-## Manually extracting text from a pdf. Doesn't work well due to many figures in the patents
+## Manually extracting text from a pdf.
+Works well, though garbage is produced for the many figures in the patents
+
 `pdfimages -j somefile.pdf ./`
 
 `convert *.pbm -type Grayscale image%d.tif`
