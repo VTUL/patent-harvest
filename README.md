@@ -44,5 +44,14 @@ cd to cloned repo
 
 `rm -- *pbm`
 
-`tesseract -l eng some_image.tif some_pdf pdf`
+-----
 
+For each tif
+
+`tesseract -l eng some_image.tif some_pdf_with_text pdf`
+
+----
+
+`/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py --output all_with_text.pdf *with_text.pdf`
+
+Now all_with_text.pdf is the original pdf, but with text info embedded
