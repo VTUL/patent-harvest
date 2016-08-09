@@ -54,4 +54,4 @@ For every single tif run:
 
 `/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py --output all_with_text.pdf *with_text.pdf`
 
-### Now all_with_text.pdf is the original pdf, but with text info embedded
+__Now all_with_text.pdf is the original pdf, but with text info embedded__
