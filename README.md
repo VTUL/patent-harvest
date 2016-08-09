@@ -46,7 +46,7 @@ cd to cloned repo
 
 -----
 
-For each tif
+For every single tif run:
 
 `tesseract -l eng some_image.tif some_pdf_with_text pdf`
 
@@ -54,4 +54,4 @@ For each tif
 
 `/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py --output all_with_text.pdf *with_text.pdf`
 
-Now all_with_text.pdf is the original pdf, but with text info embedded
+### Now all_with_text.pdf is the original pdf, but with text info embedded
