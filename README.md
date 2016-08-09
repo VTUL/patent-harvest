@@ -13,6 +13,8 @@ cd to cloned repo
 Not needed yet, but will be for OCR
 
 ```
+brew install poppler
+
 brew install imagemagick
 
 brew link libpng
