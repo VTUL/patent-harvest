@@ -38,20 +38,4 @@ cd to cloned repo
 
 ## Add OCR'd text to PDF
 
-`pdfimages -j somefile.pdf ./`
-
-`convert *.pbm -type Grayscale image%d.tif`
-
-`rm -- *pbm`
-
------
-
-For every single tif run:
-
-`tesseract -l eng some_image.tif some_pdf_with_text pdf`
-
-----
-
-`/System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py --output all_with_text.pdf *with_text.pdf`
-
-__Now all_with_text.pdf is the original pdf, but with text info embedded__
+`./text-info-pdf.sh`
