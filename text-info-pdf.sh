@@ -17,7 +17,7 @@ do
     done
     
     pdfunite  $(ls *.pdf | sort -n) output.pdf
-    mv output.pdf "../with_text_"$f.pdf
+    mv output.pdf "../with_text_"$f
     
     cd ..
     rm -rf *.tmp
