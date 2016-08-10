@@ -16,9 +16,11 @@ do
         tesseract -l eng $tifimg $tifimg"_ocr" pdf
     done
     
-    /System/Library/Automator/Combine\ PDF\ Pages.action/Contents/Resources/join.py --output "../with_text_"$f *_ocr.pdf
+    pdfunite  *.pdf out.pdf
+    mv out.pdf "../with_text_"$f.pdf
+    
     cd ..
-    rm -rf \*.tmp
+    rm -rf *.tmp
 
 
 done
