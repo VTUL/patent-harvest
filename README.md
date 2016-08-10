@@ -10,18 +10,13 @@ https://git.it.vt.edu/digital-research-services/VTechWorks_Documentation/wikis/V
 cd to cloned repo
 
 
-_Not needed yet, but will be for OCR_
+`brew install poppler`
 
-```
-brew install poppler
+`brew install imagemagick`
 
-brew install imagemagick
+`brew link libpng`
 
-brew link libpng
-
-brew install tesseract
-
-```
+`brew install tesseract`
 
 `wget https://java.net/projects/jsonp/downloads/download/ri/javax.json-ri-1.0.zip`
 
