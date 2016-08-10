@@ -13,11 +13,11 @@ do
     
     for tifimg in *.tif
     do
-        tesseract -l eng $tifimg $tifimg"_ocr" pdf
+        tesseract -l eng $tifimg $tifimg pdf
     done
     
-    pdfunite  *.pdf out.pdf
-    mv out.pdf "../with_text_"$f.pdf
+    pdfunite  $(ls *.pdf | sort -n) output.pdf
+    mv output.pdf "../with_text_"$f.pdf
     
     cd ..
     rm -rf *.tmp
