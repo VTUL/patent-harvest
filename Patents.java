@@ -39,15 +39,17 @@ public class Patents {
         String[] selectVals = {"virginia tech", "vpi", "virginia polytechnic"};
         String csvOutputPath = "./VTPatents.csv";
         // Can just set as large number you know is greater than # of patents
-        int patentCount = 10000;
-        String[] desiredFields = {"patent_number","inventor_first_name", "inventor_last_name", "patent_abstract", "uspc_subclass_id"};
-        
+        int patentCount = 1000;
+        // String[] desiredFields = {"patent_number","inventor_first_name", "inventor_last_name", "patent_abstract", "uspc_subclass_id"};
+         String[] desiredFields = {"assignee_organization", "assignee_last_name", "assignee_first_name", "inventor_last_name",
+             "inventor_first_name", "app_date", "patent_date", "patent_abstract", "app_number", "patent_number", "uspc_subclass_id",
+             "cpc_subgroup_id", "patent_title", "patent_type"};
         
         /* PDF Options */
         String usptoPDFPath = "http://pimg-fpiw.uspto.gov/fdd/";
         boolean getPDFs = false;
         String pdfDumpPath = "./filedump";
-        String csvPDFFieldName = "patent_number";
+        String csvPDFFieldName = "dc.identifier.patentID";
         
         /*****************************************************/
         
@@ -77,15 +79,11 @@ public class Patents {
         Scanner in = new Scanner(System.in);
         if (in.next().toLowerCase().equals("y")) {
             getPDFs = true;
-              System.out.println("[INFO] Dumping PDFS to `" + pdfDumpPath + "`");
         } 
         else {
             getPDFs = false;
         }
-        System.out.println("\n[INFO] Creating `" + csvOutputPath + "`");
-        
-        
-     
+
         for (int i = 0; i < entries.getLength(); ++i) {
             Node entry = entries.item(i);
             
@@ -98,22 +96,45 @@ public class Patents {
             database.add(myDoc);
            
             
-
-            myDoc.joinEntries( "inventors", 
+            // Doing some processing ***********************************
+            
+            // dc.contributor.assignee
+            String assigneeOrg = myDoc.getEntry("assignee_organization");
+            if (assigneeOrg != null && assigneeOrg.length() >= 1) {
+                myDoc.addEntry("dc.contributor.assignee", assigneeOrg);
+            }
+            else {
+                myDoc.joinEntries( "dc.contributor.assignee", 
+                new String[] {"assignee_last_name", "assignee_first_name"}, "\\|\\|", ",", false);
+            }
+            myDoc.removeEntry("assignee_organization");
+            myDoc.removeEntry("assignee_last_name");
+            myDoc.removeEntry("assignee_first_name");
+            
+            // dc.creator
+            myDoc.joinEntries( "dc.creator", 
                 new String[] {"inventor_last_name", "inventor_first_name"}, "\\|\\|", ",", true);
                 
-            // API renames uspc_subclass_id to uspc for some reason
-            myDoc.splitAtIndex("uspc", "Original Classification", "Cross Reference Classification", 1, true);
+            // dc.subject.uspc and dc.subject.uspccrossref
+            myDoc.splitAtIndex("uspc", "dc.subject.uspc", "dc.subject.uspccrossref", 1, true);
             
+            // Bulk rename
+            myDoc.bulkRename(new String[] {"app_date", "patent_date", "patent_abstract",
+                 "app_number", "patent_number", "cpcs", "patent_title", "patent_type"}, 
+                new String[] {"dc.date.filed", "dc.date.issued", "dc.description.abstract",
+                     "dc.identifier.applicationnumber", "dc.identifier.patentID", "dc.subject.cpc",
+                     "dc.title", "dc.type.patenttype"}, true);
             
-        
-           
+                
         }
-       printCSV(database, csvOutputPath);
+        System.out.println("\n[INFO] Exporting `" + csvOutputPath + "`");
+        printCSV(database, csvOutputPath);
    
         
         if (getPDFs) {
             // Download PDFs 
+            System.out.println("[INFO] Dumping PDFS to `" + pdfDumpPath + "`");
+            System.out.println("[INFO] This will take a while!");
             Process p = Runtime.getRuntime().exec("mkdir ./filedump");
             for (Doc doc : database) {
                 StringBuilder sb = new StringBuilder("wget  -O " + pdfDumpPath + "/" + doc.getEntry(csvPDFFieldName) + ".pdf");
@@ -140,7 +161,7 @@ public class Patents {
      *  */
     public static void addChildValuesHelper(Doc myDoc, Node parent ) {
         NodeList children = parent.getChildNodes();
-        if (children.getLength() == 1) {
+        if (children.getLength() == 1 && (children.item(0).getChildNodes().getLength() == 1 || children.item(0).getChildNodes().getLength() == 0)) {
            
             myDoc.addEntry(parent.getNodeName(), parent.getTextContent());
             return;
@@ -247,6 +268,7 @@ public class Patents {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
             Document doc = db.parse(xml);
+            System.out.println("\n[INFO] Request URI: " + requestSb.toString());
             return doc;
         }
         catch(Exception e) {
@@ -458,6 +480,20 @@ public class Patents {
                removeEntry(oldCol);
             }
             
+        }
+        
+        /* Allows renaming of multiple keys for a document */
+        public void bulkRename(String[] oldNames, String[] newNames, boolean deleteOld) {
+            if (oldNames.length != newNames.length) {
+                System.out.println("Error: Can't perform bulk rename. Length of old and new name list differ");
+            }
+            for (int i = 0; i < oldNames.length; ++i) {
+                entries.put(newNames[i], entries.get(oldNames[i]));
+                if (deleteOld) {
+                    removeEntry(oldNames[i]);
+                }
+                
+            }
         }
     }
 }
