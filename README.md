@@ -25,6 +25,8 @@ For OCR step:
 
 `brew install imagemagick`
 
+`brew install libpng`
+
 `brew link libpng`
 
 `brew install tesseract`
@@ -36,6 +38,8 @@ For OCR step:
 `brew install ocaml`
 
 `brew link ocaml`
+
+`chmod u+x pdfsandwich`
 
 
 ## CSV creation and PDf harvest
