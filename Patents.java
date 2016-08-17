@@ -5,7 +5,7 @@
  *  Also need Javax jar: https://java.net/projects/jsonp/downloads/download/ri/javax.json-ri-1.0.zip
  *  
  *  Compile: javac -cp javax.json-1.0.jar Patents.java
- *  Run: javac -cp javax.json-1.0.jar Patents.java
+ *  Run: java -cp "javax.json-1.0.jar:." Patents
  *  
  *  Run with: `java Patents`
  *      Program will output PatentMetadata.csv
