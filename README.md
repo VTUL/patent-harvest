@@ -9,6 +9,17 @@ https://git.it.vt.edu/digital-research-services/VTechWorks_Documentation/wikis/V
 
 cd to cloned repo
 
+For CSV creation and PDF harvesting:
+
+`wget https://java.net/projects/jsonp/downloads/download/ri/javax.json-ri-1.0.zip`
+
+`unzip javax.json*`
+
+`javac -cp javax.json-1.0.jar Patents.java`
+
+---
+
+For OCR step:
 
 `brew install poppler`
 
@@ -18,19 +29,21 @@ cd to cloned repo
 
 `brew install tesseract`
 
-`wget https://java.net/projects/jsonp/downloads/download/ri/javax.json-ri-1.0.zip`
+`brew install unpaper`
 
-`unzip javax.json*`
+`brew install gawk`
 
-`javac -cp javax.json-1.0.jar Patents.java`
+`brew install ocaml`
+
+`brew link ocaml`
 
 
-## Run
+## CSV creation and PDf harvest
 
 cd to cloned repo
 
 `java -cp "javax.json-1.0.jar:." Patents`
 
-## Add OCR'd text to PDF
+## Add OCR'd text to all
 
 `./text-info-pdf.sh`
