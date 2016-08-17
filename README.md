@@ -51,3 +51,7 @@ cd to cloned repo
 ## Add OCR'd text to all
 
 `./text-info-pdf.sh`
+
+Note: This can take a long time - over a minute for a single file. So you might want to run overnight with:
+
+`caffeinate -i ./text-info-pdf.sh`
