@@ -7,9 +7,11 @@ https://git.it.vt.edu/digital-research-services/VTechWorks_Documentation/wikis/V
 
 ## Setup
 
-cd to cloned repo
+#### For CSV creation and PDF harvesting:
 
-For CSV creation and PDF harvesting:
+`brew install wget`
+
+cd to cloned repo
 
 `wget https://java.net/projects/jsonp/downloads/download/ri/javax.json-ri-1.0.zip`
 
@@ -19,7 +21,7 @@ For CSV creation and PDF harvesting:
 
 ---
 
-For OCR step:
+#### For OCR step:
 
 `brew install poppler`
 
@@ -42,13 +44,13 @@ For OCR step:
 `chmod u+x pdfsandwich`
 
 
-## CSV creation and PDf harvest
+## Run: CSV creation and PDF harvest
 
 cd to cloned repo
 
 `java -cp "javax.json-1.0.jar:." Patents`
 
-## Add OCR'd text to all
+## Run: Add OCR'd text to all
 
 `./text-info-pdf.sh`
 
