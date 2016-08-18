@@ -1,6 +1,10 @@
 /*
  *  
- *   
+ *  Description: Harvests all USPTO patents with VT affiliated assignees. 
+ *  Gets the PDF's too.
+ * 
+ *  Author: Philippe Gray
+ * 
  *  You need to install WGET: `brew install wget`
  *  Also need Javax jar: https://java.net/projects/jsonp/downloads/download/ri/javax.json-ri-1.0.zip
  *  
