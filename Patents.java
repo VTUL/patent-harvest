@@ -23,6 +23,7 @@
  * */
 
 import java.util.*;
+import java.text.*;
 import javax.xml.*;
 import javax.json.*;
 import javax.xml.parsers.*;
@@ -64,6 +65,9 @@ public class Patents {
         ArrayList<Doc> database = new ArrayList<Doc>();
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
         .newInstance();
+        
+        DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        Date dateobj = new Date();
      
         System.out.println("\n[INFO] Downloading XML from " + apiBaseUrl);
         System.out.println("\n[INFO] Selecting by `" + selectBy + "`");
@@ -72,7 +76,7 @@ public class Patents {
         
         Document allPatents = xmlFromApi(apiBaseUrl, selectBy, selectVals, desiredFields, patentCount);
         
-        System.out.println("\n[INFO]Getting fields: ");
+        System.out.println("\n[INFO] Getting fields: ");
         System.out.println(Arrays.toString(desiredFields));
         
    
@@ -112,18 +116,21 @@ public class Patents {
             }
             else {
                 myDoc.joinEntries( "dc.contributor.assignee", 
-                new String[] {"assignee_last_name", "assignee_first_name"}, "\\|\\|", ",", false);
+                new String[] {"assignee_last_name", "assignee_first_name"}, "\\|\\|", ", ", false);
             }
             myDoc.removeEntry("assignee_organization");
             myDoc.removeEntry("assignee_last_name");
             myDoc.removeEntry("assignee_first_name");
             
             // dc.creator
-            myDoc.joinEntries( "dc.creator", 
-                new String[] {"inventor_last_name", "inventor_first_name"}, "\\|\\|", ",", true);
+            myDoc.joinEntries("dc.creator", 
+                new String[] {"inventor_last_name", "inventor_first_name"}, "\\|\\|", ", ", true);
                 
             // dc.subject.uspc and dc.subject.uspccrossref
-            myDoc.splitAtIndex("uspc", "dc.subject.uspc", "dc.subject.uspccrossref", 1, true);
+            myDoc.splitAtIndex("uspc", "dc.subject.uspc", "dc.subject.uspcother", 1, true);
+            
+            // dc.date.accessed
+            myDoc.addEntry("dc.date.accessed", df.format(dateobj));
             
             // Bulk rename
             myDoc.bulkRename(new String[] {"app_date", "patent_date", "patent_abstract",
@@ -131,6 +138,13 @@ public class Patents {
                 new String[] {"dc.date.filed", "dc.date.issued", "dc.description.abstract",
                      "dc.identifier.applicationnumber", "dc.identifier.patentID", "dc.subject.cpc",
                      "dc.title", "dc.type.patenttype"}, true);
+              
+            // Using renamed fields
+            // dc.identifier.url
+            myDoc.addEntry("dc.identifier.url", usptoPDFPath + getUsptoFilename(myDoc.getEntry(csvPDFFieldName)));
+            
+            // filename
+            myDoc.addEntry("filename", myDoc.getEntry(csvPDFFieldName) + ".pdf");
             
                 
         }
@@ -186,6 +200,9 @@ public class Patents {
      * the PDF's
      * */
     public static String getUsptoFilename(String id) {
+        if (id == null) {
+            return "";
+        }
         id = id.replace("-", "");
         StringBuilder idSb = new StringBuilder(id);
         int firstNumIndex = -1;
