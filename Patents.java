@@ -48,10 +48,15 @@ public class Patents {
         String csvOutputPath = "./VTPatents.csv";
         // Can just set as large number you know is greater than # of patents
         int patentCount = 1000;
-        // String[] desiredFields = {"patent_number","inventor_first_name", "inventor_last_name", "patent_abstract", "uspc_subclass_id"};
+
          String[] desiredFields = {"assignee_organization", "assignee_last_name", "assignee_first_name", "inventor_last_name",
              "inventor_first_name", "app_date", "patent_date", "patent_abstract", "app_number", "patent_number", "uspc_subclass_id",
              "cpc_subgroup_id", "patent_title", "patent_type"};
+             
+        // File containing list of patent ID's that you want harvested additionally
+        // use empty string for none
+        String extraPatentIdFile = "./others.txt";
+        String idFieldName = "patent_number";
         
         /* PDF Options */
         String usptoPDFPath = "http://pimg-fpiw.uspto.gov/fdd/";
@@ -74,7 +79,7 @@ public class Patents {
         System.out.println("Where `" + selectBy + "` contains any of the following: ");
         System.out.println(Arrays.toString(selectVals));
         
-        Document allPatents = xmlFromApi(apiBaseUrl, selectBy, selectVals, desiredFields, patentCount);
+        Document allPatents = xmlFromApi(apiBaseUrl, selectBy, selectVals, desiredFields, extraPatentIdFile, idFieldName, patentCount);
         
         System.out.println("\n[INFO] Getting fields: ");
         System.out.println(Arrays.toString(desiredFields));
@@ -236,9 +241,10 @@ public class Patents {
      * 
      * Example of created request
      * */
-    public static Document xmlFromApi(String base, String selectBy, String[] selectVals, String[] fields, int entryCount) {
-        StringBuilder requestSb = new StringBuilder(base);
+    public static Document xmlFromApi(String base, String selectBy, String[] selectVals, String[] fields, String extraIdFile, String idFieldName, int entryCount) {
         
+        
+        StringBuilder requestSb = new StringBuilder(base);
         JsonBuilderFactory factory = Json.createBuilderFactory(null);
         
         
@@ -248,6 +254,23 @@ public class Patents {
             selectList = selectList.add(factory.createObjectBuilder()
                 .add("_contains", factory.createObjectBuilder()
                     .add(selectBy, val)));
+        }
+        
+        // Add extra patents from file
+        if (extraIdFile.length() > 0) {
+            try {
+                File file = new File(extraIdFile);
+                Scanner fin = new Scanner(file);
+                while (fin.hasNextLine()) {
+                    selectList = selectList.add(factory.createObjectBuilder()
+                        .add("_contains", factory.createObjectBuilder()
+                            .add(idFieldName, fin.nextLine().trim())));
+                }
+            }
+            catch (Exception e) {
+                // Carry on...
+            }
+            
         }
         
         String queryPart = Json.createObjectBuilder().
