@@ -46,6 +46,7 @@ public class Patents {
         String selectBy = "assignee_organization";
         String[] selectVals = {"virginia tech", "vpi", "virginia polytechnic"};
         String csvOutputPath = "./VTPatents.csv";
+        String[] leadingCols = {"filename"};
         // Can just set as large number you know is greater than # of patents
         int patentCount = 1000;
 
@@ -62,7 +63,7 @@ public class Patents {
         String usptoPDFPath = "http://pimg-fpiw.uspto.gov/fdd/";
         boolean getPDFs = false;
         String pdfDumpPath = "./filedump";
-        String csvPDFFieldName = "dc.identifier.patentID";
+        String csvPDFFieldName = "dc.identifier.patentnumber";
         
         /*****************************************************/
         
@@ -128,7 +129,7 @@ public class Patents {
             myDoc.removeEntry("assignee_first_name");
             
             // dc.creator
-            myDoc.joinEntries("dc.creator", 
+            myDoc.joinEntries("dc.contributor.inventor", 
                 new String[] {"inventor_last_name", "inventor_first_name"}, "\\|\\|", ", ", true);
                 
             // dc.subject.uspc and dc.subject.uspccrossref
@@ -141,7 +142,7 @@ public class Patents {
             myDoc.bulkRename(new String[] {"app_date", "patent_date", "patent_abstract",
                  "app_number", "patent_number", "cpcs", "patent_title", "patent_type"}, 
                 new String[] {"dc.date.filed", "dc.date.issued", "dc.description.abstract",
-                     "dc.identifier.applicationnumber", "dc.identifier.patentID", "dc.subject.cpc",
+                     "dc.identifier.applicationnumber", "dc.identifier.patentnumber", "dc.subject.cpc",
                      "dc.title", "dc.type.patenttype"}, true);
               
             // Using renamed fields
@@ -154,7 +155,7 @@ public class Patents {
                 
         }
         System.out.println("\n[INFO] Exporting `" + csvOutputPath + "`");
-        printCSV(database, csvOutputPath);
+        printCSV(database, leadingCols, csvOutputPath);
    
         
         if (getPDFs) {
@@ -328,16 +329,24 @@ public class Patents {
     
     
     /* Output to CSV */
-    public static void printCSV(ArrayList<Doc> entries, String filename) throws
+    public static void printCSV(ArrayList<Doc> entries, String[] leadingCols, String filename) throws
     FileNotFoundException {
         PrintWriter out = new PrintWriter(new File(filename));
         StringBuilder sb = new StringBuilder();
         
+       
         ArrayList<String> cols = new ArrayList<String>();
-        for (String str: entries.get(5).getKeys()) {
-            cols.add(str);
-            sb.append(escapeForCSV(str));
+        for (String colName : leadingCols) {
+            cols.add(colName);
+            sb.append(escapeForCSV(colName));
             sb.append(",");
+        }
+        for (String str: entries.get(5).getKeys()) {
+            if (!Arrays.asList(leadingCols).contains(str)) {
+                cols.add(str);
+                sb.append(escapeForCSV(str));
+                sb.append(",");
+            }
         }
         sb.append("\n");
         for (Doc entry : entries) {
