@@ -53,6 +53,8 @@ cd to cloned repo
 
 `java -cp "javax.json-1.0.jar:." Patents`
 
+Anne - needed `java -cp javax.json-ri-1.0/lib/javax.json-1.0.jar Patents` (from patent-harvest directory)
+
 ## Run: Add OCR'd text to all
 
 `./text-info-pdf.sh`
