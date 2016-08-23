@@ -19,6 +19,9 @@ cd to cloned repo
 
 `javac -cp javax.json-1.0.jar Patents.java`
 
+Anne - needed `javac -cp javax.json-ri-1.0/lib/javax.json-1.0.jar Patents.java` (from patent-harvest directory)
+
+
 ---
 
 #### For OCR step:
