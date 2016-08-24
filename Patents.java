@@ -8,8 +8,8 @@
  *  You need to install WGET: `brew install wget`
  *  Also need Javax jar: https://java.net/projects/jsonp/downloads/download/ri/javax.json-ri-1.0.zip
  *  
- *  Compile: javac -cp javax.json-1.0.jar Patents.java
- *  Run: java -cp "javax.json-1.0.jar:." Patents
+ *  Compile: javac -cp /path/to/javax.json-1.0.jar Patents.java
+ *  Run: java -cp "/path/to/javax.json-1.0.jar:." Patents
  *  
  *  Run with: `java Patents`
  *      Program will output PatentMetadata.csv
@@ -88,16 +88,20 @@ public class Patents {
         ArrayList<Doc> database = new ArrayList<Doc>();
         DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory
         .newInstance();
+        Scanner in = new Scanner(System.in);
         
         DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
         Date dateobj = new Date();
+        
+        System.out.println("\n[OPTION] Enter starting date (YYYY-MM-DD): ");
+        String startDate = in.next();
      
         System.out.println("\n[INFO] Downloading XML from " + apiBaseUrl);
         System.out.println("\n[INFO] Selecting by `" + selectBy + "`");
         System.out.println("Where `" + selectBy + "` contains any of the following: ");
         System.out.println(Arrays.toString(selectVals));
         
-        Document allPatents = xmlFromApi(apiBaseUrl, selectBy, selectVals, desiredFields, extraPatentIdFile, idFieldName, patentCount);
+        Document allPatents = xmlFromApi(apiBaseUrl, startDate, selectBy, selectVals, desiredFields, extraPatentIdFile, idFieldName, patentCount);
         
         System.out.println("\n[INFO] Getting fields: ");
         System.out.println(Arrays.toString(desiredFields));
@@ -110,7 +114,7 @@ public class Patents {
         System.out.println("\n[INFO] Extracting metadata for " + entries.getLength() + " patent(s)");
         System.out.printf("\n[OPTION] Would you like to download PDF's (Y/N): ");
             
-        Scanner in = new Scanner(System.in);
+        
         if (in.next().toLowerCase().equals("y")) {
             getPDFs = true;
         } 
@@ -205,15 +209,14 @@ public class Patents {
      *  */
     public static void addChildValuesHelper(Doc myDoc, Node parent ) {
         NodeList children = parent.getChildNodes();
-        
         for (int i = 0; i < children.getLength(); ++i) {
             addChildValuesHelper(myDoc, children.item(i));
-            if (children.item(i).getChildNodes().getLength() == 1) {
-            myDoc.addEntry(children.item(i).getNodeName(), children.item(i).getTextContent());
-           
-        }
             
-            
+            // We want text nodes, not parents
+            if (children.item(i).getChildNodes().getLength() == 1 && children.item(i).getChildNodes().item(0).getChildNodes().getLength() == 0) {
+                myDoc.addEntry(children.item(i).getNodeName(), children.item(i).getTextContent());
+                
+            }
         }
     }
     
@@ -260,7 +263,7 @@ public class Patents {
      * 
      * Example of created request
      * */
-    public static Document xmlFromApi(String base, String selectBy, String[] selectVals, String[] fields, String extraIdFile, String idFieldName, int entryCount) {
+    public static Document xmlFromApi(String base, String startDate, String selectBy, String[] selectVals, String[] fields, String extraIdFile, String idFieldName, int entryCount) {
         
         
         StringBuilder requestSb = new StringBuilder(base);
