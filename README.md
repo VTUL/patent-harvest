@@ -17,9 +17,7 @@ cd to cloned repo
 
 `unzip javax.json*`
 
-`javac -cp javax.json-1.0.jar Patents.java`
-
-Anne - needed `javac -cp javax.json-ri-1.0/lib/javax.json-1.0.jar Patents.java` (from patent-harvest directory)
+`javac -cp javax.json-ri-1.0/lib/javax.json-1.0.jar Patents.java` (from patent-harvest directory)
 
 
 ---
@@ -51,9 +49,7 @@ Anne - needed `javac -cp javax.json-ri-1.0/lib/javax.json-1.0.jar Patents.java` 
 
 cd to cloned repo
 
-`java -cp "javax.json-1.0.jar:." Patents`
-
-Anne - needed `java -cp javax.json-ri-1.0/lib/javax.json-1.0.jar Patents` (from patent-harvest directory)
+`java -cp "javax.json-ri-1.0/lib/javax.json-1.0.jar:." Patents` (from patent-harvest directory)
 
 ## Run: Add OCR'd text to all
 
