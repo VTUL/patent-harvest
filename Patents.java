@@ -46,7 +46,24 @@ public class Patents {
         String selectBy = "assignee_organization";
         String[] selectVals = {"virginia tech", "vpi", "virginia polytechnic"};
         String csvOutputPath = "./VTPatents.csv";
-        String[] leadingCols = {"filename"};
+        String[] leadingCols = {
+            "filename",
+            "dc.identifier.patentnumber",
+            "dc.date.issued",
+            "dc.identifier.applicationnumber",
+            "dc.date.filed",
+            "dc.title",
+            "dc.contributor.inventor",
+            "dc.contributor.assignee",
+            "dc.description.abstract",
+            "dc.type.patenttype",
+            "dc.subject.uspc",
+            "dc.subject.uspcother",
+            "dc.subject.cpc",
+            "dc.date.accessed",
+            "dc.identifier.url"
+        };
+        
         // Can just set as large number you know is greater than # of patents
         int patentCount = 1000;
 
@@ -133,14 +150,14 @@ public class Patents {
                 new String[] {"inventor_last_name", "inventor_first_name"}, "\\|\\|", ", ", true);
                 
             // dc.subject.uspc and dc.subject.uspccrossref
-            myDoc.splitAtIndex("uspc", "dc.subject.uspc", "dc.subject.uspcother", 1, true);
+            myDoc.splitAtIndex("uspc_subclass_id", "dc.subject.uspc", "dc.subject.uspcother", 1, true);
             
             // dc.date.accessed
             myDoc.addEntry("dc.date.accessed", df.format(dateobj));
             
             // Bulk rename
             myDoc.bulkRename(new String[] {"app_date", "patent_date", "patent_abstract",
-                 "app_number", "patent_number", "cpcs", "patent_title", "patent_type"}, 
+                 "app_number", "patent_number", "cpc_subgroup_id", "patent_title", "patent_type"}, 
                 new String[] {"dc.date.filed", "dc.date.issued", "dc.description.abstract",
                      "dc.identifier.applicationnumber", "dc.identifier.patentnumber", "dc.subject.cpc",
                      "dc.title", "dc.type.patenttype"}, true);
@@ -188,14 +205,15 @@ public class Patents {
      *  */
     public static void addChildValuesHelper(Doc myDoc, Node parent ) {
         NodeList children = parent.getChildNodes();
-        if (children.getLength() == 1 && (children.item(0).getChildNodes().getLength() == 1 || children.item(0).getChildNodes().getLength() == 0)) {
-           
-            myDoc.addEntry(parent.getNodeName(), parent.getTextContent());
-            return;
-        }
         
         for (int i = 0; i < children.getLength(); ++i) {
             addChildValuesHelper(myDoc, children.item(i));
+            if (children.item(i).getChildNodes().getLength() == 1) {
+            myDoc.addEntry(children.item(i).getNodeName(), children.item(i).getTextContent());
+           
+        }
+            
+            
         }
     }
     
