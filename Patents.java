@@ -75,6 +75,7 @@ public class Patents {
         // use empty string for none
         String extraPatentIdFile = "./others.txt";
         String idFieldName = "patent_number";
+        String dateField = "patent_date";
         
         /* PDF Options */
         String usptoPDFPath = "http://pimg-fpiw.uspto.gov/fdd/";
@@ -101,7 +102,7 @@ public class Patents {
         System.out.println("Where `" + selectBy + "` contains any of the following: ");
         System.out.println(Arrays.toString(selectVals));
         
-        Document allPatents = xmlFromApi(apiBaseUrl, startDate, selectBy, selectVals, desiredFields, extraPatentIdFile, idFieldName, patentCount);
+        Document allPatents = xmlFromApi(apiBaseUrl, dateField, startDate, selectBy, selectVals, desiredFields, extraPatentIdFile, idFieldName, patentCount);
         
         System.out.println("\n[INFO] Getting fields: ");
         System.out.println(Arrays.toString(desiredFields));
@@ -263,7 +264,7 @@ public class Patents {
      * 
      * Example of created request
      * */
-    public static Document xmlFromApi(String base, String startDate, String selectBy, String[] selectVals, String[] fields, String extraIdFile, String idFieldName, int entryCount) {
+    public static Document xmlFromApi(String base, String dateField, String startDate, String selectBy, String[] selectVals, String[] fields, String extraIdFile, String idFieldName, int entryCount) {
         
         
         StringBuilder requestSb = new StringBuilder(base);
@@ -295,8 +296,34 @@ public class Patents {
             
         }
         
+        JsonArrayBuilder queryList = factory.createArrayBuilder();
+        queryList = queryList.add(factory.createObjectBuilder()
+                .add("_or", selectList));
+                
+        queryList = queryList.add(factory.createObjectBuilder()
+                .add("_gte", factory.createObjectBuilder()
+                        .add(dateField, startDate)));
+            
         String queryPart = Json.createObjectBuilder().
+        add("_and", queryList).build().toString();
+            
+            
+            /*
+             * 
+             * 
+              
+              String queryPart = Json.createObjectBuilder().
             add("_or", selectList).build().toString();
+            
+               JsonArrayBuilder finalQueryArr = factory.createArrayBuilder();
+        finalQueryArr.add(factory.createObjectBuilder()
+                .add("_and", Json.createObjectBuilder()
+                    add("_or", selectList) 
+              
+              
+              
+             
+             * */
         
         // Get fields part of string
         String[] newFields = new String[fields.length];
