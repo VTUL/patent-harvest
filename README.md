@@ -1,9 +1,20 @@
-USPTO Open Data Portal, https://developer.uspto.gov/product/patent
+This project harvests patent metadata and files from the United States Patent and Trademark Office (USPTO), using the 
+[USPTO Open Data Portal](https://developer.uspto.gov/product/patent). The program collect patents assigned
+to Virginia Tech for inclusion in [VTechWorks "Virginia Tech Patent" collection](http://vtechworks.lib.vt.edu/handle/10919/72295)
+in Virginia Tech's DSpace Instutional repository. 
+The metadata fields are crosswalked to fields used in [VTechWorks](http://vtechworks.lib.vt.edu/). 
+The program can be modified to search for other assignees and/or harvest other fields.
+After harvesting the metadata and files, a script performs OCR on the PDFs and adds that text to each PDF.
+ 
 
 List of fields in API, http://www.patentsview.org/api/patent.html
 
 additional detail at 
 https://git.it.vt.edu/digital-research-services/VTechWorks_Documentation/wikis/Virginia_Tech_Patents
+
+License
+-------
+This software is licensed under the GNU General Public License v2. S
 
 ## Setup
 
@@ -51,7 +62,7 @@ cd to cloned repo
 
 `java -cp "javax.json-ri-1.0/lib/javax.json-1.0.jar:." Patents` (from patent-harvest directory)
 
-## Run: Add OCR'd text to all
+## Run: Add OCR text to all PDFs
 
 `./text-info-pdf.sh`
 
