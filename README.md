@@ -14,7 +14,10 @@ https://git.it.vt.edu/digital-research-services/VTechWorks_Documentation/wikis/V
 
 License
 -------
-This software is licensed under the GNU General Public License v2. S
+This software is licensed under the GNU General Public License v2.
+
+pdfsandwich is licensed under the GNU General Public License v2.
+Tobias Elze http://www.tobias-elze.de/pdfsandwich/
 
 ## Setup
 
