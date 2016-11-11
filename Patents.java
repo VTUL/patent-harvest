@@ -42,10 +42,20 @@ public class Patents {
         
         
         /* CSV options */
+        
+        // Base url of patentsview api
         String apiBaseUrl = "http://www.patentsview.org/api/patents/query";
+        
+        // Select values wgere <selectBy> equals <selectVals>
         String selectBy = "assignee_organization";
         String[] selectVals = {"virginia tech", "vpi", "virginia polytechnic"};
+        
+        // Path of output CSV
         String csvOutputPath = "./VTPatents.csv";
+        
+        // Columns that show up first in output CSV - 
+        // don't want to change this because it relies on some complicated
+        // renaming and parsing of multiple fields
         String[] leadingCols = {
             "filename",
             "dc.identifier.patentnumber",
@@ -66,8 +76,9 @@ public class Patents {
         
         // Can just set as large number you know is greater than # of patents
         int patentCount = 1000;
-
-         String[] desiredFields = {"assignee_organization", "assignee_last_name", "assignee_first_name", "inventor_last_name",
+        
+        // Fields from patentsview api you want to be fetched
+        String[] desiredFields = {"assignee_organization", "assignee_last_name", "assignee_first_name", "inventor_last_name",
              "inventor_first_name", "app_date", "patent_date", "patent_abstract", "app_number", "patent_number", "uspc_subclass_id",
              "cpc_subgroup_id", "patent_title", "patent_type"};
              
