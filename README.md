@@ -21,6 +21,8 @@ Tobias Elze http://www.tobias-elze.de/pdfsandwich/
 
 ## Setup
 
+This is intended to work on Mac OSX. It may work on other platforms if dependencies are installed  via the native package manager. 
+
 #### For CSV creation and PDF harvesting:
 
 `brew install wget`
