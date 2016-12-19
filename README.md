@@ -16,35 +16,34 @@ License
 -------
 This software is licensed under the GNU General Public License v2.
 
-pdfsandwich is licensed under the GNU General Public License v2.
-Tobias Elze http://www.tobias-elze.de/pdfsandwich/
+pdfsandwich is licensed under the [GNU General Public License v2](http://www.tobias-elze.de/pdfsandwich/).
 
-## Setup
+## Installation
 
 This is intended to work on Mac OSX. It may work on other platforms if dependencies are installed  via the native package manager. 
 All of the following steps are from the Mac Terminal.
 
 #### For CSV creation and PDF harvesting:
-
+install wget to download this project and pdfsandwich
 ```
 brew install wget
 ```
 
-cd to cloned repo
-
+cd to the directory that will contain the cloned repo
+download this project and unzip it
 ```
 wget https://java.net/projects/jsonp/downloads/download/ri/javax.json-ri-1.0.zip
 unzip javax.json*
 ```
 
-cd to patent-harvest directory
+cd to the patent-harvest directory
 ```
 javac -cp javax.json-ri-1.0/lib/javax.json-1.0.jar Patents.java
 ```
 
 ---
 
-#### For OCR step:
+#### To install the OCR software:
 
 ```
 brew install poppler
@@ -58,7 +57,6 @@ brew install ocaml
 brew link ocaml
 chmod u+x pdfsandwich
 ```
-
 
 ## Run: CSV creation and PDF harvest
 
