@@ -75,4 +75,5 @@ java -cp "javax.json-ri-1.0/lib/javax.json-1.0.jar:." Patents
 
 Note: This can take a long time - over a minute for a single file. So you might want to run overnight with:
 ```
-caffeinate -i ./text-info-pdf.sh```
+caffeinate -i ./text-info-pdf.sh
+```
