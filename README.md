@@ -26,52 +26,53 @@ All of the following steps are from the Mac Terminal.
 
 #### For CSV creation and PDF harvesting:
 
-`brew install wget`
+```
+brew install wget
+```
 
 cd to cloned repo
 
-`wget https://java.net/projects/jsonp/downloads/download/ri/javax.json-ri-1.0.zip`
+```
+wget https://java.net/projects/jsonp/downloads/download/ri/javax.json-ri-1.0.zip
+unzip javax.json*
+```
 
-`unzip javax.json*`
-
-`javac -cp javax.json-ri-1.0/lib/javax.json-1.0.jar Patents.java` (from patent-harvest directory)
-
+cd to patent-harvest directory
+```
+javac -cp javax.json-ri-1.0/lib/javax.json-1.0.jar Patents.java
+```
 
 ---
 
 #### For OCR step:
 
-`brew install poppler`
-
-`brew install imagemagick`
-
-`brew install libpng`
-
-`brew link libpng`
-
-`brew install tesseract`
-
-`brew install unpaper`
-
-`brew install gawk`
-
-`brew install ocaml`
-
-`brew link ocaml`
-
-`chmod u+x pdfsandwich`
+```
+brew install poppler
+brew install imagemagick
+brew install libpng
+brew link libpng
+brew install tesseract
+brew install unpaper
+brew install gawk
+brew install ocaml
+brew link ocaml
+chmod u+x pdfsandwich
+```
 
 
 ## Run: CSV creation and PDF harvest
 
-cd to cloned repo
-
-`java -cp "javax.json-ri-1.0/lib/javax.json-1.0.jar:." Patents` (from patent-harvest directory)
+cd to patent-harvest directory
+```
+java -cp "javax.json-ri-1.0/lib/javax.json-1.0.jar:." Patents
+```
 
 ## Run: Add OCR text to all PDFs
 
-`./text-info-pdf.sh`
+```
+./text-info-pdf.sh`
+```
 
 Note: This can take a long time - over a minute for a single file. So you might want to run overnight with:
-
-`caffeinate -i ./text-info-pdf.sh`
+```
+caffeinate -i ./text-info-pdf.sh```
