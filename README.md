@@ -10,7 +10,9 @@ After harvesting the metadata and files, a script performs OCR on the PDFs and a
 List of fields in API, http://www.patentsview.org/api/patent.html
 
 Additional detail at 
-https://git.it.vt.edu/digital-research-services/VTechWorks_Documentation/wikis/Virginia_Tech_Patents
+https://git.it.vt.edu/digital-research-services/VTechWorks_Documentation/wikis/Virginia_Tech_Patents (restricted to VTUL members)
+
+Overview of project: https://blogs.lt.vt.edu/openvt/?p=2984.
 
 License
 -------
