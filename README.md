@@ -12,7 +12,7 @@ List of fields in API, http://www.patentsview.org/api/patent.html
 Additional detail at 
 https://git.it.vt.edu/digital-research-services/VTechWorks_Documentation/wikis/Virginia_Tech_Patents (restricted to VTUL members)
 
-Overview of project: https://blogs.lt.vt.edu/openvt/?p=2984.
+Overview of project: https://blogs.lt.vt.edu/openvt/2017/06/02/introducing-the-virginia-tech-patents-collection-in-vtechworks-and-the-patent-harvesting-software-repository-patent-harvest/
 
 License
 -------
